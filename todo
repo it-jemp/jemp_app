@@ -1,0 +1,10 @@
+Features:
+- DB
+- Eventi
+  - Registra presenza
+  - Crea evento
+- Business Card
+  - Modifica
+  - Visualizza
+- Interrogazione DB con AI
+- AI Chat con doc JEMP

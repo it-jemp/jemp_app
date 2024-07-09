@@ -1,0 +1,9 @@
+# nuxt.js build output
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+dist
+sw.*
