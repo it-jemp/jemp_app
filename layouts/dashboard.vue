@@ -46,14 +46,6 @@ const navigation = [
           <slot />
         </UMain>
 
-        <UFooter>
-          <template #left>
-            Copyright © {{ new Date().getFullYear() }}. V 0.0.1
-          </template>
-          <template #right>
-            <UColorModeButton />
-          </template>
-        </UFooter>
       </Body>
     </Body>
   </Html>

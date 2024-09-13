@@ -2,50 +2,58 @@
 import vCardsJS from "vcards-js"
 import QrcodeVue from "qrcode.vue"
 
+const supabase = useSupabaseClient()
+
 const route = useRoute()
 const url = ref("")
-const profile = ref({
-  name: "Stefano",
-  surname: "Zoni",
-  position: "CEO",
-  mail: "stefanozoni@jemp.it",
-  cell: "+39 3334582801",
-  avatar: "https://avatars.githubusercontent.com/u/739984?v=4",
-  linkedin: "https://www.linkedin.com/in/stefanozoni/",
+
+const { data: profile } = await useAsyncData("profile", async () => {
+  const { data } = await supabase
+    .from("business_card")
+    .select(
+      "nome, cognome, ruolo, email_jemp, numero_cellulare, url_linkedin, avatar_url",
+    )
+    .eq("id", route.params.id)
+    .single()
+  return data
 })
 const isOpen = ref(false)
 
-/* if (!page.value) {
+if (!profile.value) {
   throw createError({
     statusCode: 404,
     statusMessage: "Page not found",
     fatal: true,
   })
-} */
+}
 
 definePageMeta({
   layout: "bcard",
 })
 useHead({
-  title: profile.value.name + " " + profile.value.surname + " | JEMP",
+  title: profile.value.nome + " " + profile.value.cognome + " | JEMP",
 })
 
 //create a new vCard
 const vCard = vCardsJS()
 
 //set properties
-vCard.firstName = profile.value.name
-vCard.lastName = profile.value.surname
+vCard.firstName = profile.value.nome
+vCard.lastName = profile.value.cognome
 vCard.organization = "JEMP"
-if (profile.value.cell) vCard.cellPhone = profile.value.cell
-vCard.title = profile.value.position
+if (profile.value.numero_cellulare)
+  vCard.cellPhone = profile.value.numero_cellulare
+vCard.title = profile.value.ruolo
+vCard.email = profile.value.email_jemp
 vCard.url = "https://jemp.it"
 vCard.workAddress.label = "Sede"
-vCard.workAddress.street = "Via via via"
+vCard.workAddress.street = "Via Lario 8"
 vCard.workAddress.city = "Milano"
 vCard.workAddress.stateProvince = "MI"
-vCard.workAddress.postalCode = "21047"
+vCard.workAddress.postalCode = "20159"
 vCard.workAddress.countryRegion = "Italy"
+vCard.photo.attachFromUrl(profile.value.avatar_url)
+vCard.socialUrls["linkedIn"] = profile.value.url_linkedin
 
 onMounted(() => {
   const blob = new Blob([vCard.getFormattedString()], { type: "text/vcard" })
@@ -54,10 +62,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <UMain>
+  <UMain v-if="profile && profile.nome && profile.cognome">
     <ULandingSection
-      v-if="profile.name"
-      :title="profile.name + ' ' + profile.surname"
+      :title="profile.nome + ' ' + profile.cognome"
       align="left"
       :ui="{
         wrapper: 'pb-0 sm:pb-0',
@@ -65,21 +72,18 @@ onMounted(() => {
       }"
     >
       <template #title>
-        <NuxtImg
-          v-if="profile.avatar"
-          :src="profile.avatar"
+        <UAvatar
+          :src="profile.avatar_url || ''"
           class="rounded-full"
-          alt="Avatar"
-          format="webp"
-          width="80"
-          height="80"
+          :alt="profile.nome + ' ' + profile.cognome"
+          size="3xl"
         />
-        {{ profile.name + " " + profile.surname }}
+        {{ profile.nome + " " + profile.cognome }}
       </template>
 
       <template #description>
         <p class="text-lg/8 text-gray-600 dark:text-gray-300">
-          {{ profile.position }}
+          {{ profile.ruolo }}
         </p>
         <div class="relative mt-6 pl-8 leading-7">
           <dt class="font-semibold text-gray-900 dark:text-white">
@@ -91,10 +95,15 @@ onMounted(() => {
             <span>Email</span>
           </dt>
           <dd class="leading-6 text-gray-500 dark:text-gray-400">
-            <a :href="'mailto:' + profile.mail">{{ profile.mail }}</a>
+            <a :href="'mailto:' + profile.email_jemp">{{
+              profile.email_jemp
+            }}</a>
           </dd>
         </div>
-        <div v-if="profile.cell" class="relative mt-6 pl-8 leading-7">
+        <div
+          v-if="profile.numero_cellulare"
+          class="relative mt-6 pl-8 leading-7"
+        >
           <dt class="font-semibold text-gray-900 dark:text-white">
             <UIcon
               name="i-heroicons-device-phone-mobile"
@@ -104,10 +113,12 @@ onMounted(() => {
             <span>Cellulare</span>
           </dt>
           <dd class="leading-6 text-gray-500 dark:text-gray-400">
-            <a :href="'tel:' + profile.cell">{{ profile.cell }}</a>
+            <a :href="'tel:' + profile.numero_cellulare">{{
+              profile.numero_cellulare
+            }}</a>
           </dd>
         </div>
-        <div v-if="profile.linkedin" class="relative mt-6 pl-8 leading-7">
+        <div v-if="profile.url_linkedin" class="relative mt-6 pl-8 leading-7">
           <dt class="font-semibold text-gray-900 dark:text-white">
             <UIcon
               name="i-mdi-linkedin"
@@ -117,7 +128,7 @@ onMounted(() => {
             <span>LinkedIn</span>
           </dt>
           <dd class="leading-6 text-gray-500 dark:text-gray-400">
-            <a :href="profile.linkedin">{{ profile.name + ' ' + profile.surname }}</a>
+            <a :href="profile.url_linkedin">Collegati Ora</a>
           </dd>
         </div>
       </template>
@@ -127,7 +138,7 @@ onMounted(() => {
       <UButton icon="i-heroicons-qr-code" @click="isOpen = true" />
       <UButton
         :to="url"
-        :download="profile.name + profile.surname + '.vcf'"
+        :download="profile.nome + profile.cognome + '.vcf'"
         icon="i-heroicons-arrow-down-tray"
       >
         Aggiungi ai Contatti
@@ -151,7 +162,7 @@ onMounted(() => {
           />
         </template>
         <QrcodeVue
-          :value="'lmpsaronno.com/' + route.path"
+          :value="'jemp-app.vercel.app' + route.path"
           :size="200"
           level="M"
           render-as="svg"

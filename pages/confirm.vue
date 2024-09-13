@@ -1,19 +1,41 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
+const toast = useToast()
 
-// Get redirect path from cookies
-const cookieName = useRuntimeConfig().public.supabase.cookieName
-const redirectPath = useCookie(`${cookieName}-redirect-path`).value
+definePageMeta({
+  layout: "login",
+})
 
-watch(user, () => {
-  if (user.value) {
-      // Clear cookie
-      useCookie(`${cookieName}-redirect-path`).value = null
-      // Redirect to path
-      return navigateTo(redirectPath || '/'); 
-  }
-}, { immediate: true })
+watch(
+  user,
+  () => {
+    if (user.value) {
+      if (
+        Math.abs(
+          new Date().getTime() - new Date(user.value.created_at).getTime(),
+        ) <=
+        60 * 1000 // 1 minute
+      ) {
+        toast.add({
+          title: "Benvenuto!",
+          icon: "i-heroicons-check-circle-16-solid",
+          description: "Completa il tuo profilo.",
+        })
+        return navigateTo("/settings/profile")
+      } else {
+        toast.add({
+          title: "Bentornato!",
+          icon: "i-heroicons-check-circle-16-solid",
+          description: "Login effettuato con successo",
+        })
+        return navigateTo("/")
+      }
+    }
+  },
+  { immediate: true },
+)
 </script>
+
 <template>
-  <div>Waiting for login...</div>
+  <UContainer class="py-4">Waiting for login...</UContainer>
 </template>

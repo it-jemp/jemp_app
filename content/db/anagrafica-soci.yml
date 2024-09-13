@@ -1,0 +1,72 @@
+navigation:
+  to: "/db/anagrafica-soci"
+  label: "Anagrafica Soci"
+  icon: "i-heroicons-user"
+  table: anagrafica_socio
+title: "Anagrafica Soci"
+
+fields:
+  - name: "id_socio"
+    type: "integer"
+    label: "ID"
+    required: true
+  - name: "nome"
+    type: "text"
+    label: "Nome"
+    required: true
+  - name: "cognome"
+    type: "text"
+    label: "Cognome"
+    required: true
+  - name: "luogo_nascita"
+    type: "text"
+    label: "Luogo di nascita"
+    required: true
+  - name: "data_nascita"
+    type: "date"
+    label: "Data di nascita"
+    required: true
+  - name: "sesso"
+    type: "text"
+    label: "Sesso"
+    required: true
+  - name: "codice_fiscale"
+    type: "text"
+    label: "Codice fiscale"
+    required: true
+  - name: "indirizzo_residenza"
+    type: "text"
+    label: "Indirizzo di residenza"
+    required: true
+  - name: "provincia_residenza"
+    type: "text"
+    label: "Provincia di residenza"
+    required: true
+  - name: "indirizzo_domicilio"
+    type: "text"
+    label: "Indirizzo di domicilio"
+    required: true
+  - name: "email_personale"
+    type: "text"
+    label: "Email personale"
+    required: true
+  - name: "numero_cellulare"
+    type: "text"
+    label: "Numero di cellulare"
+    required: true
+  - name: "email_jemp"
+    type: "text"
+    label: "Email JEMP"
+    required: true
+  - name: "data_entrata"
+    type: "date"
+    label: "Data di entrata"
+    required: true
+  - name: "anno_corso"
+    type: "text"
+    label: "Anno di corso"
+    required: true
+  - name: "matricola"
+    type: "text"
+    label: "Matricola"
+    required: true

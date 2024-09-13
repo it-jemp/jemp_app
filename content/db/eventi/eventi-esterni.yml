@@ -1,0 +1,47 @@
+navigation:
+  to: "/db/eventi/eventi-esterni"
+  label: "Evento"
+  table: evento
+title: "Eventi Esterni"
+
+fields:
+  - name: "id_evento"
+    type: "integer"
+    label: "ID"
+    required: true
+  - name: "id_recruitment"
+    type: "integer"
+    label: "ID Recruitment"
+    required: false
+  - name: "nome"
+    type: "text"
+    label: "Nome"
+    required: true
+  - name: "tipologia"
+    type: "text"
+    label: "Tipologia"
+    required: true
+  - name: "target"
+    type: "text"
+    label: "Target"
+    required: true
+  - name: "costo"
+    type: "float"
+    label: "Costo"
+    required: false
+  - name: "data"
+    type: "date"
+    label: "Data"
+    required: true
+  - name: "durata"
+    type: "integer"
+    label: "Durata"
+    required: true
+  - name: numero_iscritti
+    type: "integer"
+    label: "Numero Iscritti"
+    required: false
+  - name: orario
+    type: "time"
+    label: "Orario"
+    required: false

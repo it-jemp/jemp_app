@@ -1,29 +1,34 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  nitro: {
-    preset: "bun",
-  },
   devtools: { enabled: true },
+
+  runtimeConfig: {
+    public: {
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    },
+  },
+
   modules: [
-    "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
-    "@nuxt/image",
     "@nuxt/eslint",
     "@nuxtjs/supabase",
     "@nuxt/ui",
+    "@nuxt/content",
+    "@nuxt/image",
   ],
-  extends: ['@nuxt/ui-pro'],
-  piniaPersistedstate: {
-    cookieOptions: {
-      path: "/",
-      // maxAge: 60 * 60 * 24 * 30,
-      secure: true,
-    },
-  },
+
+  extends: ["@nuxt/ui-pro"],
+
   supabase: {
-    redirect: false,
+    redirectOptions: {
+      login: "/login",
+      callback: "/confirm",
+      exclude: ["/bcard/view/*"],
+    },
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production",
+    },
+    types: "./interfaces/supabase.ts",
   },
-  ui: {
-    icons: ['mdi', 'heroicons']
-  }
+
+  compatibilityDate: "2024-08-24",
 })

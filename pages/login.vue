@@ -1,20 +1,34 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
-const email = ref("")
 
-const signInWithOtp = async () => {
-  const { error } = await supabase.auth.signInWithOtp({
-    email: email.value,
+definePageMeta({
+  layout: "login",
+})
+
+const redirectTo = `${useRuntimeConfig().public.baseUrl}/confirm`
+
+const signInGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
     options: {
-      emailRedirectTo: "http://localhost:3000/confirm",
+      redirectTo: redirectTo,
     },
   })
   if (error) console.log(error)
 }
 </script>
+
 <template>
-  <div>
-    <button @click="signInWithOtp">Sign In with E-Mail</button>
-    <input v-model="email" type="email" />
-  </div>
+  <UContainer class="py-4">
+    <UAuthForm
+      class="mx-auto"
+      title="Login"
+      :providers="[
+        {
+          label: 'Google',
+          click: signInGoogle,
+        },
+      ]"
+    />
+  </UContainer>
 </template>

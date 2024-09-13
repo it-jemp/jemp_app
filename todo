@@ -1,10 +1,12 @@
 Features:
-- DB
-- Eventi
-  - Registra presenza
-  - Crea evento
-- Business Card
-  - Modifica
-  - Visualizza
 - Interrogazione DB con AI
-- AI Chat con doc JEMP
+- Condizionalità codici presenza
+- Menù db condizionale in base a permessi
+- PWA
+- Notifiche
+- Table
+    - Bulk actions (delete)
+    - Divide text search from filters
+    - filter result count
+    - Forma Add remove id option or make it 'are you sure?'
+    - Trigger table refresh on form submit

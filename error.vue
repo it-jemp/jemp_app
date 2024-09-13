@@ -1,21 +1,15 @@
 <script setup lang="ts">
-defineProps({
-  /* eslint-disable-next-line vue/require-default-prop */
-  error: Object as () => {
-    statusCode: number
-    fatal: boolean
-    unhandled: boolean
-    statusMessage?: string
-    data?: unknown
-    cause?: unknown
-  },
-})
+import type { NuxtError } from "#app"
 
-const localePath = useLocalePath()
+defineProps<{
+  error: NuxtError
+}>()
 </script>
 
 <template>
   <NuxtLayout>
-    <p>Error</p>
+    <UPage>
+      <UPageError :error="error" />
+    </UPage>
   </NuxtLayout>
 </template>

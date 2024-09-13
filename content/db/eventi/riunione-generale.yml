@@ -1,0 +1,15 @@
+navigation:
+  to: "/db/eventi/riunione-generale"
+  label: "RG"
+  table: riunione_generale
+title: "Riunioni Generali"
+
+fields:
+  - name: id_riunione_generale
+    type: integer
+    label: ID
+    required: true
+  - name: data
+    type: timestamp
+    label: Data
+    required: true
