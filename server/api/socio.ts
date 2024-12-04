@@ -1,4 +1,4 @@
-import type { ITableSoci } from "@/interfaces/kuntur"
+import { Api } from "nocodb-sdk"
 import { serverSupabaseUser } from "#supabase/server"
 
 export default defineEventHandler(async (event) => {
@@ -13,34 +13,22 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig(event)
 
-  const params = {
-    filter: JSON.stringify({
-      conjunction: "and",
-      filterSet: [
-        {
-          fieldId: "fldXnKNqC3jJGgmdREn",
-          operator: "is",
-          value: user.email,
-        },
-      ],
-    }),
-  }
-
-  const url = new URL(
-    `https://${config.kuntur.domain}/api/table/${config.kuntur.sociTable}/record`,
-  )
-  Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.append(key, value)
-  })
-
-  const soci = await $fetch<ITableSoci>(url.toString(), {
-    method: "GET",
+  const api = new Api({
+    baseURL: `https://${config.kuntur.domain}`,
     headers: {
-      Authorization: `Bearer ${config.kuntur.token}`,
-      Accept: "application/json",
+      "xc-token": `${config.kuntur.token}`,
     },
   })
-  const socio = soci["records"][0]
+
+  const socio = await api.dbTableRow.findOne(
+    "noco",
+    config.kuntur.base,
+    config.kuntur.sociTable,
+    {
+      fields: ["Id", "Email Jemp"],
+      where: `(Email Jemp,eq,${user.email})`,
+    },
+  )
 
   return socio
 })

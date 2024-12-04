@@ -2,7 +2,6 @@
 import { object, number, type InferType } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 import { localeDate } from "@/utilities"
-import type { ISocio, ITablePartecipazioni } from "@/interfaces/kuntur"
 
 const supabase = useSupabaseClient()
 const toast = useToast()
@@ -37,24 +36,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       throw new Error("Nessun evento trovato")
     }
     // Get socio ID from Teable using email_jemp
-    const socio = await $fetch<ISocio>("/api/socio")
+    const socio = await $fetch<{
+      Id: number
+      "Email Jemp": string
+    }>("/api/socio")
     if (!socio) {
       throw new Error(
         "Socio non trovato. Verificare la mail JEMP in Anagrafica Soci su Kuntur.",
       )
     }
     // Insert presenza
-    const partecipazione = await $fetch<ITablePartecipazioni>(
-      "/api/add_presenza",
-      {
-        method: "POST",
-        body: {
-          id_socio: socio.id,
-          id_evento: eventi[0].id,
-          tipologia: eventi[0].tipologia,
-        },
+    const partecipazione = await $fetch("/api/add_presenza", {
+      method: "POST",
+      body: {
+        id_socio: socio.Id,
+        id_evento: eventi[0].id_kuntur,
+        tipologia: eventi[0].tipologia,
       },
-    )
+    })
     if (!partecipazione) {
       throw new Error("Errore durante l'inserimento della presenza")
     } else {

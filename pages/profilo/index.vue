@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { ISocio } from "@/interfaces/kuntur"
-
-const { data: profile, error } = await useFetch<ISocio>("/api/socio")
+const { data: profile, error } = await useFetch<{
+  Id: number
+  "Email Jemp": string
+}>("/api/socio")
 
 if (!profile.value) {
   throw createError({
@@ -23,11 +24,11 @@ const admin = await isAdmin()
         <p>Errore durante il caricamento del profilo</p>
       </div>
       <div v-else class="space-y-4">
-        <UFormGroup label="Nome Cognome">
-          <p>{{ profile?.fields["Nome Cognome"] }}</p>
+        <UFormGroup label="ID Socio">
+          <p>{{ profile?.Id }}</p>
         </UFormGroup>
         <UFormGroup label="Email Jemp">
-          <p>{{ profile?.fields["Email Jemp"] }}</p>
+          <p>{{ profile?.["Email Jemp"] }}</p>
         </UFormGroup>
         <UFormGroup label="Admin">
           <UIcon v-if="admin" name="i-heroicons-check-circle" class="h-5 w-5" />

@@ -110,19 +110,19 @@ export type Database = {
       codici_evento: {
         Row: {
           codice: string
-          id: string
+          id: number
         }
         Insert: {
           codice: string
-          id: string
+          id: number
         }
         Update: {
           codice?: string
-          id?: string
+          id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "codice_evento_id_fkey"
+            foreignKeyName: "codici_evento_id_fkey"
             columns: ["id"]
             referencedRelation: "eventi"
             referencedColumns: ["id"]
@@ -132,19 +132,22 @@ export type Database = {
       eventi: {
         Row: {
           data: string
-          id: string
+          id: number
+          id_kuntur: number | null
           nome: string
           tipologia: string
         }
         Insert: {
           data: string
-          id: string
+          id?: number
+          id_kuntur?: number | null
           nome: string
           tipologia: string
         }
         Update: {
           data?: string
-          id?: string
+          id?: number
+          id_kuntur?: number | null
           nome?: string
           tipologia?: string
         }
@@ -167,7 +170,8 @@ export type Database = {
         }
         Returns: {
           data: string
-          id: string
+          id: number
+          id_kuntur: number | null
           nome: string
           tipologia: string
         }[]

@@ -8,11 +8,15 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: "http://localhost:3000",
-      appVersion: "0.0.0",
+      appVersion: "1.0.0",
+      kpi: {
+        hr: "",
+      },
     },
     kuntur: {
       token: "",
       domain: "",
+      base: "",
       eventiTable: "",
       rgTable: "",
       sociTable: "",

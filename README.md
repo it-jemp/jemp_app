@@ -1,25 +1,41 @@
-# Nuxt.js frontend replacement for FastAPI base project generator
+# Nuxt Minimal Starter
 
-## What is it?
-
-Accelerate your next FastAPI Base Project Generator frontend development with NuxtJS, an open source framework making web development simple and powerful.
+Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
 
-Make sure to install the dependencies:
+Make sure to install dependencies:
 
 ```bash
+# npm
+npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
 # bun
 bun install
 ```
 
-## Development
+## Development Server
 
-Start the development server on http://localhost:3000
+Start the development server on `http://localhost:3000`:
 
 ```bash
+# npm
+npm run dev
+
+# pnpm
+pnpm dev
+
+# yarn
+yarn dev
+
 # bun
-bun dev
+bun run dev
 ```
 
 ## Production
@@ -27,15 +43,33 @@ bun dev
 Build the application for production:
 
 ```bash
+# npm
+npm run build
+
+# pnpm
+pnpm build
+
+# yarn
+yarn build
+
 # bun
-bun build
+bun run build
 ```
 
 Locally preview production build:
 
 ```bash
-#bun
-bun preview
+# npm
+npm run preview
+
+# pnpm
+pnpm preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
 ```
 
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

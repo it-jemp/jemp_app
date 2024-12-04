@@ -1,11 +1,11 @@
-import type { ITablePartecipazioni } from "@/interfaces/kuntur"
+import { Api } from "nocodb-sdk"
 import { serverSupabaseUser } from "#supabase/server"
 
 export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
   const body: {
-    id_socio: string
-    id_evento: string
+    id_socio: number
+    id_evento: number
     tipologia: string
   } = await readBody(event)
 
@@ -19,51 +19,35 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
 
   let tableId = ""
-  const fields: {
-    "Anagrafica Socio": {
-      id: string
-    }
-    "Riunione Generale"?: {
-      id: string
-    }
-    Evento?: {
-      id: string
-    }
+  const data: {
+    anagrafica_socio_id: number
+    riunione_generale_id?: number
+    evento_id?: number
   } = {
-    "Anagrafica Socio": {
-      id: body.id_socio,
-    },
+    anagrafica_socio_id: body.id_socio,
   }
 
-  if (body.tipologia == "rg") {
+  if (body.tipologia == "Riunione Generale") {
     tableId = config.kuntur.rgTable
-    fields["Riunione Generale"] = {
-      id: body.id_evento,
-    }
-  } else {
+    data.riunione_generale_id = body.id_evento
+  } else if (body.tipologia == "Evento") {
     tableId = config.kuntur.eventiTable
-    fields["Evento"] = {
-      id: body.id_evento,
-    }
+    data.evento_id = body.id_evento
   }
+
+  const api = new Api({
+    baseURL: `https://${config.kuntur.domain}`,
+    headers: {
+      "xc-token": `${config.kuntur.token}`,
+    },
+  })
 
   try {
-    const partecipazione = await $fetch<ITablePartecipazioni>(
-      `https://${config.kuntur.domain}/api/table/${tableId}/record`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${config.kuntur.token}`,
-          Accept: "application/json",
-        },
-        body: {
-          records: [
-            {
-              fields: fields,
-            },
-          ],
-        },
-      },
+    const partecipazione = await api.dbTableRow.create(
+      "noco",
+      config.kuntur.base,
+      tableId,
+      data,
     )
     return partecipazione
   } catch {
