@@ -8,12 +8,12 @@ const rows = ref<object[]>([])
 
 const { data: eventi, error } = await useAsyncData("eventi", async () => {
   const { data } = await supabase
-    .from("codici_evento")
-    .select("codice, eventi(nome, data)")
+    .from("eventi")
+    .select("nome, data, codici_evento(codice)")
   return data?.map((e) => ({
-    evento: e.eventi?.nome,
-    data: e.eventi?.data && localeDate(e.eventi.data),
-    codice: e.codice,
+    evento: e.nome,
+    data: e.data && localeDate(e.data),
+    codice: e.codici_evento.codice,
   }))
 })
 if (error.value) {

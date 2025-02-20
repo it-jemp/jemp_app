@@ -15,7 +15,6 @@ const { data: profile } = await useAsyncData("profile", async () => {
   return data
 })
 
-const phoneRegExp = /^(3[1-6][0-9])(\d{7})$/gm
 const schema = object({
   nome: string().required("Richiesto"),
   cognome: string().required("Richiesto"),

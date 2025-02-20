@@ -45,8 +45,7 @@ export default defineEventHandler(async (event) => {
     fields["Evento"] = {
       id: body.id_evento,
     }
-  }
-  else {
+  } else {
     throw createError({
       statusCode: 500,
       statusMessage: "Tipologia Evento non trovata",
