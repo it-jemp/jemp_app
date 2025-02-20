@@ -1,6 +1,7 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   nitro: {
     preset: "bun",
   },
@@ -22,7 +23,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/supabase", "@nuxt/ui", "@nuxt/image"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxtjs/supabase",
+    "@nuxt/ui",
+    "@nuxt/image",
+    "@sentry/nuxt/module",
+  ],
 
   extends: ["@nuxt/ui-pro"],
 
@@ -39,4 +46,15 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: "2024-08-24",
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: "jemp",
+      project: "javascript-nuxt",
+    },
+  },
+
+  sourcemap: {
+    client: "hidden",
+  },
 })
