@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { object, number, type InferType } from "yup"
+import * as Sentry from "@sentry/nuxt"
 import type { FormSubmitEvent } from "#ui/types"
 import { localeDate } from "@/utilities"
 import type { ISocio, ITablePartecipazioni } from "@/interfaces/kuntur"
@@ -32,16 +33,27 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       codice_input: String(event.data.codice),
     })
     if (error) {
-      throw new Error(error.message)
+      throw createError({
+        statusCode: 500,
+        message: error.message,
+        statusMessage: "Errore durante il recupero dell'evento",
+      })
     } else if (eventi.length === 0) {
-      throw new Error("Nessun evento trovato")
+      throw createError({
+        statusCode: 500,
+        message: "Evento non trovato",
+        statusMessage: "Evento non trovato",
+      })
     }
     // Get socio ID from Teable using email_jemp
     const socio = await $fetch<ISocio>("/api/socio")
     if (!socio) {
-      throw new Error(
-        "Socio non trovato. Verificare la mail JEMP in Anagrafica Soci su Kuntur.",
-      )
+      throw createError({
+        statusCode: 500,
+        message: "Socio non trovato.",
+        statusMessage:
+          "Socio non trovato. Verificare la mail JEMP in Anagrafica Soci su Kuntur.",
+      })
     }
     // Insert presenza
     const partecipazione = await $fetch<ITablePartecipazioni>(
@@ -56,7 +68,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       },
     )
     if (!partecipazione) {
-      throw new Error("Errore durante l'inserimento della presenza")
+      throw createError({
+        statusCode: 500,
+        message: "Errore durante l'inserimento della presenza",
+        statusMessage: "Errore durante l'inserimento della presenza",
+      })
     } else {
       toast.add({
         title: "Presenza registrata",
@@ -67,10 +83,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   } catch (error) {
     toast.add({
       title: "Errore",
-      description:
-        error instanceof Error ? error.message : "Errore sconosciuto",
+      description: isNuxtError(error)
+        ? error.statusMessage
+        : "Errore sconosciuto",
       icon: "i-heroicons-x-circle-solid",
     })
+    Sentry.captureException(error)
   }
   codeInput.value?.clear()
   loading.value = false

@@ -24,8 +24,8 @@ if (!profile.value) {
 if (!profile.value.nome || !profile.value.cognome) {
   throw createError({
     statusCode: 404,
-    message: "BCard non configurata",
-    statusMessage: "Crea la tua BCard prima di visualizzarla",
+    message: "Crea la tua BCard prima di visualizzarla",
+    statusMessage: "BCard non configurata",
     fatal: true,
   })
 }

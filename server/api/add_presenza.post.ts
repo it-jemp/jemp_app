@@ -1,5 +1,6 @@
 import type { ITablePartecipazioni } from "@/interfaces/kuntur"
 import { serverSupabaseUser } from "#supabase/server"
+import * as Sentry from "@sentry/nuxt"
 
 export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
@@ -72,11 +73,7 @@ export default defineEventHandler(async (event) => {
     )
     return partecipazione
   } catch (error) {
-    console.log(error)
-    console.log(body)
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Errore durante l'aggiunta della presenza a Kuntur",
-    })
+    Sentry.captureException(error)
+    return false
   }
 })
