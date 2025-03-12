@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: "http://localhost:3000",
-      appVersion: "1.0.1",
+      appVersion: "1.0.2",
       kpi: {
         hr: "",
       },
