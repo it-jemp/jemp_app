@@ -1,18 +1,30 @@
 {
+  "files.exclude": {
+    "**/.ruff_cache": true,
+    "**/__pycache__": true
+  },
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/node_modules/**": true,
+    "**/.nuxt/**": true,
+    "**/.hg/store/**": true,
+    "**/.venv/**": true
+  },
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+
+  // Tailwind CSS IntelliSense
   "files.associations": {
     "*.css": "tailwindcss"
   },
   "editor.quickSuggestions": {
     "strings": true
   },
-  "tailwindCSS.classAttributes": [
-    "class",
-    "className",
-    "ngClass",
-    "ui",
-    "img-attrs"
-  ],
-  "eslint.experimental.useFlatConfig": true,
+
+  // Nuxt
+  "eslint.useFlatConfig": true,
+
+  // Prettier
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -20,6 +32,21 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockercompose]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
