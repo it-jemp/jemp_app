@@ -73,7 +73,11 @@ export default defineEventHandler(async (event) => {
     )
     return partecipazione
   } catch (error) {
-    Sentry.captureException(error)
+    Sentry.captureException(error, {
+      extra: {
+        body,
+      },
+    })
     return false
   }
 })

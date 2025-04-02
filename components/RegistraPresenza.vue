@@ -27,18 +27,30 @@ const state = reactive({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true
+  let socio: ISocio | null = null
+  let eventi:
+    | {
+        data: string
+        id: number
+        id_kuntur: number | null
+        nome: string
+        tipologia: string
+      }[]
+    | null = null
+  let partecipazione: ITablePartecipazioni | null = null
   try {
     // Get eventi from Supabase
-    const { data: eventi, error } = await supabase.rpc("evento_from_codice", {
+    const { data, error } = await supabase.rpc("evento_from_codice", {
       codice_input: String(event.data.codice),
     })
+    eventi = data
     if (error) {
       throw createError({
         statusCode: 500,
         message: error.message,
         statusMessage: "Errore durante il recupero dell'evento",
       })
-    } else if (eventi.length === 0) {
+    } else if (!eventi || eventi.length === 0) {
       throw createError({
         statusCode: 500,
         message: "Evento non trovato",
@@ -46,7 +58,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       })
     }
     // Get socio ID from Teable using email_jemp
-    const socio = await $fetch<ISocio>("/api/socio")
+    socio = await $fetch<ISocio>("/api/socio")
     if (!socio) {
       throw createError({
         statusCode: 500,
@@ -56,17 +68,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       })
     }
     // Insert presenza
-    const partecipazione = await $fetch<ITablePartecipazioni>(
-      "/api/add_presenza",
-      {
-        method: "POST",
-        body: {
-          id_socio: socio.id,
-          id_evento: eventi[0].id_kuntur,
-          tipologia: eventi[0].tipologia,
-        },
+    partecipazione = await $fetch<ITablePartecipazioni>("/api/add_presenza", {
+      method: "POST",
+      body: {
+        id_socio: socio.id,
+        id_evento: eventi[0].id_kuntur,
+        tipologia: eventi[0].tipologia,
       },
-    )
+    })
     if (!partecipazione) {
       throw createError({
         statusCode: 500,
@@ -88,7 +97,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         : "Errore sconosciuto",
       icon: "i-heroicons-x-circle-solid",
     })
-    Sentry.captureException(error)
+    Sentry.captureException(error, {
+      extra: {
+        codice: event.data.codice,
+        socio,
+        eventi,
+        partecipazione,
+      },
+    })
   }
   codeInput.value?.clear()
   loading.value = false

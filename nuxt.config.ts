@@ -51,6 +51,8 @@ export default defineNuxtConfig({
     sourceMapsUploadOptions: {
       org: "jemp",
       project: "javascript-nuxt",
+      authToken:
+        "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",
     },
   },
 
