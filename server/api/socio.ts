@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
 
   const params = {
+    fieldKeyType: "id",
     filter: JSON.stringify({
       conjunction: "and",
       filterSet: [
