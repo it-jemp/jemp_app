@@ -53,8 +53,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  try {
-    const partecipazione = await $fetch<ITablePartecipazioni>(
+  function registerPartecipazione() {
+    return $fetch<ITablePartecipazioni>(
       `https://${config.kuntur.domain}/api/table/${tableId}/record`,
       {
         method: "POST",
@@ -71,6 +71,20 @@ export default defineEventHandler(async (event) => {
         },
       },
     )
+  }
+
+  try {
+    let retryCount = 0
+    const maxRetries = 3
+    let partecipazione: ITablePartecipazioni | null = null
+    while (retryCount < maxRetries) {
+      partecipazione = await registerPartecipazione()
+      if (partecipazione) {
+        break
+      }
+      retryCount++
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    }
     return partecipazione
   } catch (error) {
     Sentry.captureException(error, {
