@@ -11,10 +11,10 @@ export default defineEventHandler(async (event) => {
   } = await readBody(event)
 
   if (!user) {
-    return {
-      status: 401,
-      body: "Unauthorized",
-    }
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Unauthorized",
+    })
   }
 
   const config = useRuntimeConfig(event)
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  function registerPartecipazione() {
+  async function registerPartecipazione() {
     return $fetch<ITablePartecipazioni>(
       `https://${config.kuntur.domain}/api/table/${tableId}/record`,
       {
@@ -83,8 +83,20 @@ export default defineEventHandler(async (event) => {
         break
       }
       retryCount++
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
     }
+    if (!partecipazione) {
+      Sentry.captureException(new Error("Failed to register partecipazione"), {
+        extra: {
+          body,
+          user,
+          retryCount,
+          tableId,
+          fields,
+        },
+      })
+    }
+
     return partecipazione
   } catch (error) {
     Sentry.captureException(error, {
