@@ -10,9 +10,6 @@ export default defineNuxtConfig({
     public: {
       baseUrl: "http://localhost:3000",
       appVersion: "1.0.5",
-      kpi: {
-        hr: "",
-      },
     },
     kuntur: {
       token: "",
