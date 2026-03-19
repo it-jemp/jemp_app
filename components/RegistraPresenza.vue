@@ -10,6 +10,7 @@ const toast = useToast()
 
 const codeInput = useTemplateRef("codeInput")
 const loading = ref(false)
+const submitMessage = ref("")
 
 const schema = object({
   codice: number()
@@ -26,6 +27,11 @@ const state = reactive({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  if (loading.value) {
+    return
+  }
+
+  submitMessage.value = "Registrazione presenza in corso..."
   loading.value = true
   let socio: ISocio | null = null
   let eventi:
@@ -88,15 +94,21 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: `Presenza registrata per l'evento ${eventi[0].nome} (${localeDate(eventi[0].data!)})`,
         icon: "i-heroicons-check-circle-solid",
       })
+      submitMessage.value = "Presenza registrata correttamente."
     }
   } catch (error) {
+    const description = isNuxtError(error)
+      ? error.statusCode === 429
+        ? error.statusMessage
+        : error.statusMessage
+      : "Errore sconosciuto"
+
     toast.add({
       title: "Errore",
-      description: isNuxtError(error)
-        ? error.statusMessage
-        : "Errore sconosciuto",
+      description,
       icon: "i-heroicons-x-circle-solid",
     })
+    submitMessage.value = description
     Sentry.captureException(error, {
       extra: {
         codice: event.data.codice,
@@ -116,6 +128,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UFormGroup label="Codice Presenza" name="codice">
       <CodeInput ref="codeInput" v-model="state.codice" :fields="6" />
     </UFormGroup>
-    <UButton type="submit" :loading="loading"> Invia </UButton>
+    <p
+      v-if="submitMessage"
+      class="text-sm"
+      :class="loading ? 'text-primary-600' : 'text-gray-600'"
+    >
+      {{ submitMessage }}
+    </p>
+    <UButton type="submit" :loading="loading" :disabled="loading">
+      {{ loading ? "Registrazione in corso..." : "Invia" }}
+    </UButton>
   </UForm>
 </template>
