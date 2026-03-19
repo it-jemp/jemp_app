@@ -4,23 +4,43 @@ on:
   push:
     branches:
       - main
+      - test
 
 jobs:
-  build:
+  prepare:
     if: startsWith(github.event.head_commit.message, 'Release version=')
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract_version.outputs.version }}
+      image_name: ${{ steps.resolve_image.outputs.image_name }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Extract Version from Commit Message
         id: extract_version
         run: |
           echo "Commit message: ${{ github.event.head_commit.message }}"
           VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP '(?<=Release version=)\d+\.\d+\.\d+')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Resolve Docker Image Name
+        id: resolve_image
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "image_name=jemp_app" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_name }}" = "test" ]; then
+            echo "image_name=jemp_app_test" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported branch: ${{ github.ref_name }}"
+            exit 1
+          fi
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ needs.prepare.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -38,12 +58,13 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/jemp_app:${{ steps.extract_version.outputs.version }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/jemp_app:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ needs.prepare.outputs.image_name }}:${{ needs.prepare.outputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ needs.prepare.outputs.image_name }}:latest
           platforms: linux/arm64
           #platforms: linux/amd64,linux/arm64
 
   create-release:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
