@@ -11,6 +11,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    openrouterApiKey: "",
+    openrouterEmbeddingModel: "",
+    openrouterChatModel: "",
+    googleServiceAccountEmail: "",
+    googleServiceAccountPrivateKey: "",
+    googleDriveFolderId: "",
+    supabaseServiceRoleKey: "",
+    adminEmail: "",
     public: {
       baseUrl: "http://localhost:3000",
       appVersion: "1.0.6",

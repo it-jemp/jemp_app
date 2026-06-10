@@ -36,5 +36,20 @@
         </div>
       </UCard>
     </NuxtLink>
+
+    <NuxtLink to="/assistant" class="w-full">
+      <UCard class="w-full cursor-pointer hover:ring-2 hover:ring-primary transition-shadow">
+        <div class="flex items-center gap-4">
+          <UIcon name="i-heroicons-sparkles" class="text-4xl text-primary shrink-0" />
+          <div>
+            <h2 class="text-xl font-semibold">Assistente JEMP</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Chiedi informazioni sui documenti interni: strategia, KPI, verbali, procedure
+            </p>
+          </div>
+          <UIcon name="i-heroicons-arrow-right" class="ml-auto text-xl text-gray-400" />
+        </div>
+      </UCard>
+    </NuxtLink>
   </UContainer>
 </template>

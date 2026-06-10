@@ -5,6 +5,7 @@ const navigation = [
   { label: "Home", to: "/" },
   { label: "KPI", to: "/kpi" },
   { label: "Eventi", to: "/eventi" },
+  { label: "Assistente AI", to: "/assistant" },
   ...((await isAdmin()) ? [{ label: "Codici Presenza", to: "/presenze" }] : []),
   {
     label: "Business Card",
