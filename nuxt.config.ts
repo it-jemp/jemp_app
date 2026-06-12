@@ -2,11 +2,23 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  experimental: {
+    appManifest: false,
+  },
+
   nitro: {
     preset: "bun",
   },
 
   runtimeConfig: {
+    openrouterApiKey: "",
+    openrouterEmbeddingModel: "",
+    openrouterChatModel: "",
+    googleServiceAccountEmail: "",
+    googleServiceAccountPrivateKey: "",
+    googleDriveFolderId: "",
+    supabaseServiceRoleKey: "",
+    adminEmail: "",
     public: {
       baseUrl: "http://localhost:3000",
       appVersion: "1.0.6",
@@ -17,6 +29,14 @@ export default defineNuxtConfig({
       eventiTable: "",
       rgTable: "",
       sociTable: "",
+    },
+    metabase: {
+      siteUrl: "",
+      secretKey: "",
+      dashboardAuditIt: "",
+      dashboardHr: "",
+      dashboardMarketing: "",
+      dashboardCommerciale: "",
     },
   },
 

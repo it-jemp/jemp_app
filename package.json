@@ -22,8 +22,10 @@
     "@nuxt/ui-pro": "^1.5.0",
     "@nuxtjs/supabase": "^1.4.3",
     "@sentry/nuxt": "^9",
+    "googleapis": "^173.0.0",
     "nuxt": "^3.14.1592",
     "nuxt-og-image": "^4.0.0",
+    "openai": "^6.41.0",
     "qrcode.vue": "^3.6.0",
     "yup": "^1.4.0"
   },
