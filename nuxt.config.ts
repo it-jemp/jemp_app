@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  experimental: {
+    appManifest: false,
+  },
+
   nitro: {
     preset: "bun",
   },
@@ -17,6 +21,14 @@ export default defineNuxtConfig({
       eventiTable: "",
       rgTable: "",
       sociTable: "",
+    },
+    metabase: {
+      siteUrl: "",
+      secretKey: "",
+      dashboardAuditIt: "",
+      dashboardHr: "",
+      dashboardMarketing: "",
+      dashboardCommerciale: "",
     },
   },
 

@@ -3,6 +3,8 @@ const user = useSupabaseUser()
 
 const navigation = [
   { label: "Home", to: "/" },
+  { label: "KPI", to: "/kpi" },
+  { label: "Eventi", to: "/eventi" },
   ...((await isAdmin()) ? [{ label: "Codici Presenza", to: "/presenze" }] : []),
   {
     label: "Business Card",
